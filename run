@@ -1,0 +1,14 @@
+#!/bin/sh
+
+name=async-iterator-utilities
+
+case $1 in
+    build)
+        podman build -f Containerfile.dev -t $name ./
+        ;;
+
+    npm)
+        shift 1
+        podman run -v ./:/opt/app -i -t $name npm "$@"
+        ;;
+esac

@@ -1,0 +1,6 @@
+{
+  "name": "@vaaas/async-iterator-utilities",
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
+}
