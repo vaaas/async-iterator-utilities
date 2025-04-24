@@ -1,0 +1,7 @@
+.gitignore
+Containerfile.dev
+package-lock.json
+run
+src
+tsconfig.json
+vite.config.js

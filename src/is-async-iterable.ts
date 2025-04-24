@@ -1,3 +1,7 @@
-export function isAsyncIterable(xs: unknown): xs is AsyncIterable<unknown> {
-  return !!xs && typeof xs[Symbol.asyncIterator] === "function";
+export function isAsyncIterable(x: unknown): x is AsyncIterable<unknown> {
+  return (
+    x !== null &&
+    (typeof x === "object" || typeof x === "function") &&
+    Symbol.asyncIterator in x
+  );
 }

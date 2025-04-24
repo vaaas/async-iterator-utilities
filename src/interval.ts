@@ -28,7 +28,7 @@ export class Interval implements AsyncIterable<undefined> {
   }
 
   start(): this {
-    if (!this.#dt) {
+    if (!this.#id) {
       this.#id = setInterval(() => this.#stream.next(undefined), this.#dt);
     }
     return this;
