@@ -1,45 +1,41 @@
+import { AsyncStream } from "./async-stream";
+import { iter } from "./internal-helpers";
+import { Maybe } from "./types";
+
 export class Interval implements AsyncIterable<undefined> {
-  #id: undefined | ReturnType<typeof setInterval>;
+  #id: Maybe<ReturnType<typeof setInterval>>;
   #dt: number;
-  #pending: undefined | ((value: IteratorResult<undefined>) => void);
+  #stream: AsyncStream<undefined>;
 
   constructor(dt: number) {
     this.#id = undefined;
     this.#dt = dt;
-    this.#pending = undefined;
+    this.#stream = new AsyncStream();
   }
 
-  stop() {
+  end(): this {
+    this.stop();
+    this.#stream.end();
+    return this;
+  }
+
+  stop(): this {
     if (this.#id) {
       clearInterval(this.#id);
       this.#id = undefined;
     }
+    return this;
+  }
 
-    if (this.#pending) {
-      this.#pending({
-        value: undefined,
-        done: true,
-      });
+  start(): this {
+    if (!this.#dt) {
+      this.#id = setInterval(() => this.#stream.next(undefined), this.#dt);
     }
+    return this;
   }
 
   [Symbol.asyncIterator](): AsyncIterator<undefined> {
-    this.#id = setInterval(() => {
-      if (this.#pending) {
-        this.#pending({
-          value: undefined,
-          done: false,
-        });
-      }
-    }, this.#dt);
-
-    return {
-      next: () => {
-        const promise = new Promise<IteratorResult<undefined>>((resolve) => {
-          this.#pending = resolve;
-        });
-        return promise;
-      },
-    };
+    this.start();
+    return iter(this.#stream);
   }
 }

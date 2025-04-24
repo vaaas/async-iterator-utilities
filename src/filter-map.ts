@@ -1,8 +1,8 @@
-import { Unary } from "./types";
+import { Maybe, Unary } from "./types";
 
 export async function* filterMap<A, B>(
   xs: AsyncIterable<A>,
-  f: Unary<A, B | undefined>,
+  f: Unary<A, Maybe<undefined>>,
 ): AsyncIterable<B> {
   for await (const x of xs) {
     const y = f(x);

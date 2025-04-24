@@ -23,25 +23,25 @@ export function merge<A, B, C, D, E>(
   es: AsyncIterable<E>,
 ): AsyncIterable<A | B | C | D | E>;
 export function merge(...xs: Array<AsyncIterable<any>>): AsyncIterable<any> {
+  const stream = new AsyncStream();
   let pending = xs.length;
-  function decrementPending() {
+
+  function done() {
     pending--;
     if (pending === 0) {
       stream.end();
     }
   }
 
-  function consume(iterator: AsyncIterator<any>): void {
-    iterator.next().then((x) => {
-      if (x.done) decrementPending();
-      else stream.next(x.value);
-      consume(iterator);
-    });
+  async function consume(xs: AsyncIterable<any>): Promise<void> {
+    for await (const x of xs) {
+      stream.next(x);
+    }
+    done();
   }
 
-  const stream = new AsyncStream();
   for (const x of xs) {
-    consume(x[Symbol.asyncIterator]());
+    consume(x);
   }
 
   return stream;
