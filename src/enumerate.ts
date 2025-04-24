@@ -3,7 +3,6 @@ export async function* enumerate<X>(
 ): AsyncIterable<[number, X]> {
   let i = 0;
   for await (const x of xs) {
-    yield [i, x];
-    i++;
+    yield [i++, x];
   }
 }

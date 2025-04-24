@@ -3,6 +3,10 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "target": "ES2023",
-    "lib": ["ES2023", "DOM"]
-  }
+    "lib": ["ES2023", "DOM"],
+    "moduleResolution": "nodenext",
+    "module": "NodeNext"
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["./dist/**/*"]
 }
